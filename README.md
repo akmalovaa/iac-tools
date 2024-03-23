@@ -1,4 +1,4 @@
-# docker-iac-tools
+# Docker image for iac pipelines
 
 docker image for ci/cd
 
