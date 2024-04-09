@@ -18,7 +18,7 @@ deploy:
 
 ## Terraform
 
-## Ansbile
+## Ansible
 - community.docker
 - proxmoxer
 - sshpass
