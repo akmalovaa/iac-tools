@@ -1,7 +1,16 @@
 version: '3'
 
+env:
+  IMAGE: 'docker run --rm -it iac-tools'
+
 tasks:
   build:
     desc: "build iac tools container"
     cmds:
-      - docker build -t iactools .
+      - docker build -t iac-tools .
+  bash:
+    desc: "exec container"
+    cmds:
+      - task: build
+      - $IMAGE bash
+
