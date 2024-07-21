@@ -1,16 +1,23 @@
-# Docker image for iac pipelines
+# Docker image for ci/cd
+## Infrastructure as Code
 
-Container image for ci/cd
+В основном для развертывания инсфраструктуры использую:
+- terraform
+- ansible
 
-- **Ansible:** 2.16.6
-- **Terraform:** 1.8.2
-- **Task:** 3.36.0
-- curl
-- git
-- proxmoxer
+Для **terraform** использую официальный образ `hashicorp/terraform:1.9`
+
+Для **ansible** решил собрать свой набор необходимых инструментов:
+- jq
+- rsync
 - requests
 - sshpass
 
+ansible-galaxy:
+- community.docker
+
+
+Возможно еще добавлю `yq` и пару инструментов для дебага или не тащить ничего лишнего и пойти в сторону alpine для уменьшения размера образа
 
 ## Usage
 

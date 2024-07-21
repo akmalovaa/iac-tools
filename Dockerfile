@@ -1,21 +1,19 @@
-FROM python:3.12.3-slim 
+FROM python:3.12.4-slim-bookworm
 
-ENV TERRAFORM_VERSION=1.8.2
+RUN apt update && apt install -y \
+        sshpass \
+        jq \
+        rsync
 
-# Install Terraform
-RUN apt update -y \
-    && apt install -y curl unzip git \ 
-    && apt autoremove -y \
-    && curl -q https://releases.hashicorp.com/terraform/{$TERRAFORM_VERSION}/terraform_{$TERRAFORM_VERSION}_linux_amd64.zip -o terraform.zip \
-    && unzip -q terraform.zip \
-    && mv terraform /usr/local/bin/ \
-    && rm -rf terraform.zip
+RUN pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir ansible requests
 
-# Install Ansible
-RUN apt install -y sshpass
-RUN pip install --upgrade pip && pip install ansible proxmoxer requests
+# COPY requirements.yml .
+# RUN ansible-galaxy install -r requirements.yml
+RUN ansible-galaxy collection install community.docker
 
-# Install task
-RUN (cd /usr && curl -sL https://taskfile.dev/install.sh | sh)
+RUN DEBIAN_FRONTEND=noninteractive \
+    apt-get autoremove -y && \
+    apt-get clean -y && \
+    rm -rf /var/cache/apt/archives/* /var/cache/apt/lists/* /tmp/* /root/cache/.
 
 WORKDIR /srv
