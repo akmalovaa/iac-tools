@@ -3,7 +3,8 @@ FROM python:3.12.4-slim-bookworm
 RUN apt update && apt install -y \
         sshpass \
         jq \
-        rsync
+        rsync \
+        git
 
 RUN pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir ansible requests
 
