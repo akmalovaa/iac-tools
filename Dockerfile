@@ -1,4 +1,5 @@
-FROM python:3.12.4-slim-bookworm
+ARG PYTHON_VERSION=3.13.2
+FROM python:$PYTHON_VERSION-slim
 
 RUN apt update && apt install -y \
         sshpass \
