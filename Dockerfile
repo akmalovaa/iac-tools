@@ -5,7 +5,9 @@ RUN apt update && apt install -y \
         sshpass \
         jq \
         rsync \
-        git
+        git \
+        less \
+        openssh-client
 
 RUN pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir ansible requests
 
@@ -18,4 +20,4 @@ RUN DEBIAN_FRONTEND=noninteractive \
     apt-get clean -y && \
     rm -rf /var/cache/apt/archives/* /var/cache/apt/lists/* /tmp/* /root/cache/.
 
-WORKDIR /srv
+WORKDIR /ansible
