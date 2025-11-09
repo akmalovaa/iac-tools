@@ -1,40 +1,84 @@
 # Docker image for ci/cd
+
+![Base Image](https://img.shields.io/badge/base-python:3.14--slim-blue)
+![Docker Image Size](https://img.shields.io/badge/size-351MB-green)
+
 ## Infrastructure as Code
 
-В основном для развертывания инсфраструктуры использую:
-- terraform
-- ansible
+Для развертывания инфраструктуры homelab использую:
 
-Для **terraform** использую официальный образ `hashicorp/terraform:1.9`
+- **terraform** - [официальный образ](https://hub.docker.com/r/hashicorp/terraform/tags)
+- **ansible** - свой образ с набором инструментов на базе [python](https://hub.docker.com/_/python/tags)
 
-Для **ansible** решил собрать свой набор необходимых инструментов:
-- jq
-- rsync
-- requests
-- sshpass
+## Ansible Image Features
 
-ansible-galaxy:
-- community.docker
+Базовый образ: `python:3.14-slim`
 
+### Установленные инструменты
 
-Возможно еще добавлю `yq` и пару инструментов для дебага или не тащить ничего лишнего и пойти в сторону alpine для уменьшения размера образа
+- `jq` - обработка JSON
+- `yq` - обработка YAML/XML  
+- `rsync` - синхронизация файлов
+- `sshpass` - автоматизация SSH подключений
+- `git` - система контроля версий
+- `openssh-client` - SSH клиент
+
+### Python пакеты
+
+- `ansible-core` - минимальная установка Ansible без лишних коллекций
+- `requests` - HTTP библиотека
+
+### Ansible коллекции
+
+- `community.docker` - управление Docker контейнерами
 
 ## Usage
 
-local pull
+### Скачать образ с github container registry
+
 ```bash
 docker pull ghcr.io/akmalovaa/iac-tools
 ```
 
-example `gitlab-ci.yml`
+### Локальная сборка
+
+```bash
+just build
+
+# Или напрямую через docker
+docker build -t iac-tools .
+```
+
+### Запуск контейнера
+
+```bash
+# Интерактивный режим
+docker run --rm -it ghcr.io/akmalovaa/iac-tools bash
+
+# Монтирование текущей директории
+docker run --rm -it -v $(pwd):/ansible ghcr.io/akmalovaa/iac-tools bash
+```
+
+### Примеры использования в CI/CD
+
+#### GitLab CI
+
 ```yaml
 deploy:
   stage: deploy
   image: ghcr.io/akmalovaa/iac-tools
   script:
-    - cat /etc/os-release
+    - ansible-playbook -i inventory playbook.yml
   when: manual
 ```
 
+## Development
 
+Для разработки используется [just](https://github.com/casey/just) для автоматизации команд:
 
+```bash
+just build    # Собрать образ
+just bash     # Запустить контейнер
+just size     # Показать размер образа
+just help     # Список команд
+```

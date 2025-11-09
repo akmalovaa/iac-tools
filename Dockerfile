@@ -1,23 +1,25 @@
-ARG PYTHON_VERSION=3.13.2
+ARG PYTHON_VERSION=3.14
 FROM python:$PYTHON_VERSION-slim
 
-RUN apt update && apt install -y \
+RUN apt update && apt install -y --no-install-recommends \
         sshpass \
         jq \
+        yq \
         rsync \
         git \
-        less \
-        openssh-client
+        openssh-client \
+    && apt-get autoremove -y \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* /tmp/* /var/tmp/*
 
-RUN pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir ansible requests
+# ansible-core + requests
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir ansible-core requests \
+    && pip cache purge
 
-# COPY requirements.yml .
-# RUN ansible-galaxy install -r requirements.yml
-RUN ansible-galaxy collection install community.docker
-
-RUN DEBIAN_FRONTEND=noninteractive \
-    apt-get autoremove -y && \
-    apt-get clean -y && \
-    rm -rf /var/cache/apt/archives/* /var/cache/apt/lists/* /tmp/* /root/cache/.
+# install ansible collections from requirements.yml
+COPY requirements.yml .
+RUN ansible-galaxy collection install -r requirements.yml \
+    && rm -rf ~/.ansible/tmp/* ~/.cache/ansible-galaxy /tmp/* /var/tmp/* /root/.ansible/galaxy_cache
 
 WORKDIR /ansible
