@@ -30,7 +30,8 @@
 
 ### Ansible коллекции
 
-- `community.docker` - управление Docker контейнерами
+- `community.docker` - управление Docker контейнерами  
+- `ansible.posix` - POSIX утилиты
 
 ## Usage
 
