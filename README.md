@@ -1,7 +1,7 @@
 # Docker image for ci/cd
 
 ![Base Image](https://img.shields.io/badge/base-python:3.14--slim-blue)
-![Docker Image Size](https://img.shields.io/badge/size-351MB-green)
+![Docker Image Size](https://img.shields.io/badge/size-366MB-green)
 
 ## Infrastructure as Code
 
@@ -31,6 +31,7 @@
 ### Ansible коллекции
 
 - `community.docker` - управление Docker контейнерами
+- `community.general` - общие модули (включая мониторинг)
 
 ## Usage
 
