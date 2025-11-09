@@ -31,7 +31,6 @@
 ### Ansible коллекции
 
 - `community.docker` - управление Docker контейнерами
-- `community.general` - общие модули (включая мониторинг)
 
 ## Usage
 
