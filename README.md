@@ -1,20 +1,15 @@
-# Docker image for ci/cd
+# iac-tools
 
+Ansible Docker image for homelab CI/CD
+
+[![Docker](https://github.com/akmalovaa/iac-tools/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/akmalovaa/iac-tools/actions/workflows/docker-publish.yml)
 ![Base Image](https://img.shields.io/badge/base-python:3.14--slim-blue)
-![Docker Image Size](https://img.shields.io/badge/size-366MB-green)
 
-## Infrastructure as Code
+## Features
 
-Для развертывания инфраструктуры homelab использую:
+Базовый образ: [`python:3.14-slim`](https://hub.docker.com/_/python/tags)
 
-- **terraform** - [официальный образ](https://hub.docker.com/r/hashicorp/terraform/tags)
-- **ansible** - свой образ с набором инструментов на базе [python](https://hub.docker.com/_/python/tags)
-
-## Ansible Image Features
-
-Базовый образ: `python:3.14-slim`
-
-### Установленные инструменты
+### Системные пакеты
 
 - `jq` - обработка JSON
 - `yq` - обработка YAML/XML  
@@ -35,7 +30,7 @@
 
 ## Usage
 
-### Скачать образ с github container registry
+### Скачать образ с [GHCR](https://ghcr.io/akmalovaa/iac-tools)
 
 ```bash
 docker pull ghcr.io/akmalovaa/iac-tools
@@ -57,10 +52,23 @@ docker build -t iac-tools .
 docker run --rm -it ghcr.io/akmalovaa/iac-tools bash
 
 # Монтирование текущей директории
-docker run --rm -it -v $(pwd):/ansible ghcr.io/akmalovaa/iac-tools bash
+docker run --rm -it -v "$(pwd)":/ansible ghcr.io/akmalovaa/iac-tools bash
 ```
 
 ### Примеры использования в CI/CD
+
+#### GitHub Actions
+
+```yaml
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/akmalovaa/iac-tools:latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: ansible-playbook -i inventory playbook.yml
+```
 
 #### GitLab CI
 
@@ -75,7 +83,7 @@ deploy:
 
 ## Development
 
-Для разработки используется [just](https://github.com/casey/just) для автоматизации команд:
+Требования: [Docker](https://docs.docker.com/get-docker/), [just](https://github.com/casey/just) (опционально)
 
 ```bash
 just build    # Собрать образ
